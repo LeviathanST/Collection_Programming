@@ -1,0 +1,9 @@
+--------------------COMMAND--------------------
+	crf: create file
+	Usage: crf <path/>
+
+	wrf: Write file
+	Usage: crf <path/> <content> [Can be contain whitespace]
+
+	edf: Edit file
+	Usage: edf <path/>

@@ -20,6 +20,7 @@ public class Author implements IAuthor, Serializable {
     public void get() {
         System.err.println("ID: " + AuthorID);
         System.err.println("Name: " + name);
+        System.err.println("-------------");
     }
 
     public String getID() {

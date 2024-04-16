@@ -1,0 +1,12 @@
+-
+[Options]:
+--------------------------------------
+(Conditions)
++ ID
++ Name
+
+(Value)
++ ID: Author's ID
++ ID: Author's name (Can contain whitespace)
+
+--------------------------------------

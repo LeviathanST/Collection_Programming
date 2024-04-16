@@ -1,8 +1,11 @@
+-
 [Options]:
 --------------------------------------
-add: Add book
+add: Add author
 
-show: Show available book in list 
+show: Show available author in list 
+
+search: Search content by condition
 
 back: Comeback to lobby
 --------------------------------------

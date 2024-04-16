@@ -17,7 +17,7 @@ public class SystemBookManagement implements SystemBookManagementHandler {
 
     public void Init() {
         boolean exit = false;
-        fileUtils.readFile(new File("lobbyCommand.dat"));
+        fileUtils.readFile(new File("guide\\lobbyCommand.dat"));
 
         while (!exit) {
             System.out.print("Your option: ");

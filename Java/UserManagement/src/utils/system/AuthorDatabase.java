@@ -10,11 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import src.lib.interfaces.IAuthorDatabase;
 import src.service.Author;
 
 @SuppressWarnings("unchecked")
-public class AuthorDatabase {
-    private File file = new File("author.dat");
+public class AuthorDatabase implements IAuthorDatabase {
+    private File file = new File("database\\author.dat");
     private List<Author> authors;
 
     public AuthorDatabase() {
@@ -36,9 +37,38 @@ public class AuthorDatabase {
         if (activePrint) {
             for (Author author : authors) {
                 author.get();
-                System.err.println("-------------");
             }
         }
+        return authors;
+    }
+
+    public List<Author> loadAuthors(String type, String value) {
+        List<Author> authors = new ArrayList<>();
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            authors = (List<Author>) in.readObject();
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        for (Author author : authors) {
+            switch (type) {
+                case "ID":
+                    if (author.getID().contains(value)) {
+                        author.get();
+                    }
+                    break;
+
+                case "Name":
+                    if (author.getName().contains(value)) {
+                        author.get();
+                    }
+                    break;
+
+                default:
+                    System.err.println("Condition's type is invalid!. Please try again!");
+                    break;
+            }
+        }
+
         return authors;
     }
 

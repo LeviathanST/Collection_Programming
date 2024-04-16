@@ -1,8 +1,9 @@
+-
 [Options]:
 --------------------------------------
-book: Move to book's page feature
+add: Add book
 
-author: Move to author's page feature
+show: Show available book in list 
 
-q: quit
+back: Comeback to lobby
 --------------------------------------

@@ -12,13 +12,13 @@ public class CommandUtils {
 
         switch (command) {
             case "book":
-                fileUtils.readFile(new File("bookCommand.dat"));
+                fileUtils.readFile(new File("guide\\bookCommand.dat"));
                 while (!back) {
                     back = BookCommandUtils.Choose(scanner);
                 }
                 return false;
             case "author":
-                fileUtils.readFile(new File("authorCommand.dat"));
+                fileUtils.readFile(new File("guide\\authorCommand.dat"));
                 while (!back) {
                     back = AuthorCommandUtils.Choose(scanner);
                 }

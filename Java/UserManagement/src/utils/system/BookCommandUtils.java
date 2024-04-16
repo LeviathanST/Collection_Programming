@@ -9,12 +9,21 @@ public class BookCommandUtils {
         BookDatabase bookDatabase = new BookDatabase();
 
         String command = scanner.nextLine();
-        switch (command) {
+        switch (command.toLowerCase()) {
             case "add":
                 bookDatabase.addBook(scanner);
                 return false;
             case "show":
                 bookDatabase.loadBooks(true);
+                return false;
+            case "search":
+                bookDatabase.loadBooks(scanner);
+                return false;
+            case "update":
+                bookDatabase.updateBook(scanner);
+                return false;
+            case "delete":
+                bookDatabase.deleteBook(scanner);
                 return false;
             case "back":
                 return true;

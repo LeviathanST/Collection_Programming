@@ -1,17 +1,18 @@
 package src.lib.interfaces;
 
-import org.omg.CORBA.Any;
+import java.util.List;
+import java.util.Scanner;
+
+import src.service.Book;
 
 public interface IBookDatabase {
-    void loadBooks(boolean activePrint);
+    List<Book> loadBooks(boolean activePrint);
 
-    void loadBooks(String type, String condition, Any value);
+    void loadBooks(Scanner scanner);
 
-    void addBook();
+    void addBook(Scanner scanner);
 
-    void updateBook();
+    void updateBook(Scanner scanner);
 
-    void deleteBook();
-
-    void searchBookByTitle();
+    void deleteBook(Scanner scanner);
 }

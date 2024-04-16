@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import org.omg.CORBA.Any;
-
+import src.lib.interfaces.IBookDatabase;
+import src.service.Author;
 import src.service.Book;
+import src.utils.FileUtils;
 
 @SuppressWarnings("unchecked")
-public class BookDatabase {
+public class BookDatabase implements IBookDatabase {
     private File file = new File("database\\book.dat");
     private List<Book> books;
 
@@ -34,16 +35,27 @@ public class BookDatabase {
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
+
         if (activePrint) {
+            System.err.println("-------------");
             for (Book book : this.books) {
                 book.get();
-                System.err.println("-------------");
             }
         }
         return this.books;
     }
 
-    public <T> List<Book> loadAuthors(String type, String condition, T value) {
+    public void loadBooks(Scanner scanner) {
+        FileUtils fileUtils = new FileUtils();
+        fileUtils.readFile(new File("guide\\bookSearchCommand.dat"));
+        System.err.print("Choose condition's type: ");
+        String type = scanner.nextLine();
+        System.err.print("Enter condition: ");
+        String condition = scanner.nextLine();
+        System.err.print("Enter value: ");
+        String value = scanner.nextLine();
+        System.err.println("-------------");
+
         List<Book> books = new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
             books = (List<Book>) in.readObject();
@@ -51,12 +63,9 @@ public class BookDatabase {
             e.printStackTrace();
         }
         for (Book book : books) {
-            switch (type) {
+            switch (type.toLowerCase()) {
                 case "price":
-                    if (!(value instanceof Integer)) {
-                        System.err.println("Type's value is invalid. Please try again!");
-                    }
-                    Integer priceValue = (Integer) value;
+                    Integer priceValue = Integer.parseInt(value);
 
                     if ("greater".equals(condition) && book.getPrice() > priceValue) {
                         book.get();
@@ -69,20 +78,31 @@ public class BookDatabase {
                     }
                     break;
                 case "ISBN":
+                    if (book.getISBN() == Long.parseLong(value)) {
+                        book.get();
+                    }
                     break;
                 case "title":
+
+                    if (book.getTitle().contains(value)) {
+                        book.get();
+                    }
                     break;
-                case "AuthorID":
+                case "authorid":
+                    if (book.getAuthorID().contains(value)) {
+                        book.get();
+                    }
                     break;
                 default:
                     System.err.println("Condition's type is invalid!. Please try again!");
                     break;
             }
         }
-        return books;
     }
 
     public void addBook(Scanner scanner) {
+        AuthorDatabase authorDatabase = new AuthorDatabase();
+
         System.err.println("Title: ");
         String title = scanner.nextLine();
         System.err.println("Price: ");
@@ -99,6 +119,18 @@ public class BookDatabase {
             }
         }
 
+        Author existentAuthor = null;
+        for (Author author : authorDatabase.loadAuthors(false)) {
+            if (author.getID().equals(AuthorID)) {
+                existentAuthor = author;
+                break;
+            }
+        }
+
+        if (existentAuthor == null) {
+            System.err.println("Author is not existed in list!");
+        }
+
         this.books.add(new Book(ISBN, title, price, AuthorID));
 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
@@ -109,7 +141,99 @@ public class BookDatabase {
         }
     }
 
-    public void updateBook(Scanner scanner) {
+    public void deleteBook(Scanner scanner) {
+        List<Book> newBooks = new ArrayList<>();
+
+        System.err.print("Enter deleted book's ISBN: ");
+        long deletedBookISBN = Long.parseLong(scanner.nextLine());
+        System.err.print("\nAre you sure? (Y/N) ==>");
+        String answer = scanner.nextLine().trim();
+
+        if ("Y".equalsIgnoreCase(answer)) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+                books = (List<Book>) in.readObject();
+
+                for (Book book : books) {
+                    if (book.getISBN() != deletedBookISBN) {
+                        newBooks.add(book);
+                    }
+                }
+
+                try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
+                    out.writeObject(newBooks);
+                } catch (IOException e) {
+                    System.err.println("Error writing updated book list back to file.");
+                    e.printStackTrace();
+                }
+
+            } catch (ClassNotFoundException | IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return;
+        }
 
     }
+
+    public void updateBook(Scanner scanner) {
+        System.err.println("Enter book's ISBN: ");
+        String isbnInput = scanner.nextLine();
+        long isbn = Long.parseLong(isbnInput);
+
+        System.err.println("Which detail would you like to change? (title/price/authorID)");
+        String type = scanner.nextLine();
+
+        boolean bookFound = false;
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            books = (List<Book>) in.readObject();
+
+            for (Book book : books) {
+                if (book.getISBN() == isbn) {
+                    switch (type.toLowerCase()) {
+                        case "title":
+                            System.err.println("Enter new title: ");
+                            String newTitle = scanner.nextLine();
+                            book.setTitle(newTitle);
+                            bookFound = true;
+                            break;
+                        case "price":
+                            System.err.println("Enter new price: ");
+                            int newPrice = scanner.nextInt();
+                            scanner.nextLine();
+                            book.setPrice(newPrice);
+                            bookFound = true;
+                            break;
+                        case "authorid":
+                            System.err.println("Enter new Author ID: ");
+                            String newAuthorID = scanner.nextLine();
+                            book.setAuthorID(newAuthorID);
+                            bookFound = true;
+                            break;
+                        default:
+                            System.err.println("Detail type not recognized.");
+                            break;
+                    }
+                    if (bookFound) {
+                        break;
+                    }
+                }
+            }
+
+            if (bookFound) {
+                // Write the updated list back to the file
+                try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
+                    out.writeObject(books);
+                } catch (IOException e) {
+                    System.err.println("Error writing updated book list back to file.");
+                    e.printStackTrace();
+                }
+            } else {
+                System.err.println("Book with ISBN " + isbn + " not found.");
+            }
+
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

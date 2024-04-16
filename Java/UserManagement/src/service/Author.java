@@ -31,4 +31,8 @@ public class Author implements IAuthor, Serializable {
         return this.name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

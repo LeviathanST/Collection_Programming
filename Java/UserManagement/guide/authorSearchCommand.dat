@@ -1,12 +1,13 @@
 -
 [Options]:
 --------------------------------------
-(Conditions)
-+ ID
-+ Name
+(Type)
++ id
++ name
++ cancel
 
 (Value)
 + ID: Author's ID
-+ ID: Author's name (Can contain whitespace)
++ Name: Author's name (Can contain whitespace)
 
 --------------------------------------

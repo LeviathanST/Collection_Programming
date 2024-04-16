@@ -1,0 +1,15 @@
+-
+[Options]:
+--------------------------------------
+(Type)
++ price
++ title
++ ISBN
++ authorID
+
+(Conditions)
+[Price]:
+    + greater
+    + less-than
+    + equals
+--------------------------------------

@@ -26,7 +26,7 @@ public class Book implements IBook, Serializable {
         System.err.println("Price: " + this.price);
         System.err.println("AuthorID: " + this.authorID);
         System.err.println("ISBN: " + this.ISBN);
-        return;
+        System.err.println("-------------");
     }
 
     public long getISBN() {
@@ -40,4 +40,21 @@ public class Book implements IBook, Serializable {
     public int getPrice() {
         return this.price;
     }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setAuthorID(String id) {
+        this.authorID = id;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 }

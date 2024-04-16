@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 import src.lib.interfaces.IAuthorDatabase;
 import src.service.Author;
+import src.utils.FileUtils;
 
 @SuppressWarnings("unchecked")
 public class AuthorDatabase implements IAuthorDatabase {
@@ -42,7 +43,15 @@ public class AuthorDatabase implements IAuthorDatabase {
         return authors;
     }
 
-    public List<Author> loadAuthors(String type, String value) {
+    public List<Author> loadAuthors(Scanner scanner) {
+        FileUtils fileUtils = new FileUtils();
+        fileUtils.readFile(new File("guide\\authorSearchCommand.dat"));
+        System.err.print("Choose condition's type: ");
+        String type = scanner.nextLine();
+        System.err.print("Enter value: ");
+        String value = scanner.nextLine();
+        System.err.println("-------------");
+
         List<Author> authors = new ArrayList<>();
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
             authors = (List<Author>) in.readObject();
@@ -51,24 +60,26 @@ public class AuthorDatabase implements IAuthorDatabase {
         }
         for (Author author : authors) {
             switch (type) {
-                case "ID":
+                case "id":
                     if (author.getID().contains(value)) {
                         author.get();
                     }
                     break;
 
-                case "Name":
+                case "name":
                     if (author.getName().contains(value)) {
                         author.get();
                     }
                     break;
-
+                case "cancel":
+                    break;
                 default:
                     System.err.println("Condition's type is invalid!. Please try again!");
                     break;
             }
         }
 
+        System.err.println("-------------");
         return authors;
     }
 

@@ -3,7 +3,11 @@
 --------------------------------------
 add: Add book
 
+delete: Delete book
+
 show: Show available book in list 
+
+update: Update book's details
 
 back: Comeback to lobby
 --------------------------------------

@@ -9,7 +9,7 @@ public interface IAuthorDatabase {
 
     List<Author> loadAuthors(boolean activePrint);
 
-    List<Author> loadAuthors(String type, String value);
+    List<Author> loadAuthors(Scanner scanner);
 
     void addAuthor(Scanner scanner);
 }
